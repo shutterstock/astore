@@ -1,14 +1,37 @@
 {
   "name": "astore",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "description": "An ephemeral shared store for DAOs",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha tests/index.js --exit"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "frederic charette <fcharette@shutterstock.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shutterstock/forked-http.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shutterstock/forked-http/issues"
+  },
+  "keywords": [
+    "async",
+    "store",
+    "promise",
+    "shared",
+    "dao",
+    "entity",
+    "api",
+    "node"
+  ],
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "contributors": [
+    "Frederic Charette <fcharette@shutterstock.com>"
+  ],
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
 }

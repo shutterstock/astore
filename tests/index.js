@@ -29,16 +29,25 @@ const testDao = {
   },
 };
 
-const testStore = astore(testDao);
+describe('Smoke test, single', () => {
 
-let now = Date.now();
-testStore.get({ id: 123 }, 'getOne')
-  .then(() => {
-    console.log('First get: ', (Date.now() - now), 'ms');
-    now = Date.now();
-  })
-  .then(testStore.get.bind(null, { id: 123 }, 'getOne'))
-  .then(() => {
-    console.log('Second get: ', (Date.now() - now), 'ms');
-    now = Date.now();
+  let testStore;
+  beforeEach(() => {
+    testStore = astore(testDao);
   });
+
+  it('should cache entities', (done) => {
+    let now = Date.now();
+    testStore.get({ id: 123 }, 'getOne')
+      .then(() => {
+        console.log('First get: ', (Date.now() - now), 'ms');
+        now = Date.now();
+      })
+      .then(testStore.get.bind(null, { id: 123 }, 'getOne'))
+      .then(() => {
+        console.log('Second get: ', (Date.now() - now), 'ms');
+        now = Date.now();
+        done();
+      });
+  });
+});
