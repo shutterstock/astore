@@ -4,7 +4,7 @@
   "description": "An ephemeral shared store for DAOs",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha tests/index.js --exit"
+    "test": "mocha tests/index.js --timeout 5000 --exit"
   },
   "author": "frederic charette <fcharette@shutterstock.com>",
   "license": "MIT",

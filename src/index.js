@@ -16,6 +16,16 @@ function asyncStore(dao, options = {}) {
   const identifier = options.identifier || 'id';
 
   /**
+   * Performs the query directly without delay or cache
+   * @param {object} opts The options for the dao
+   * @param {string} method The dao method to call
+   * @returns {Promise}
+   */
+  function direct(opts, method) {
+    return dao[method](opts);
+  }
+
+  /**
    * Performs a query that returns a single entities to be cached
    * @param {object} opts The options for the dao
    * @param {string} method The dao method to call
@@ -48,7 +58,7 @@ function asyncStore(dao, options = {}) {
   }
 
   /**
-   * Performs a query that returns a list of entities to be cached
+   * Performs a search query that returns a list of entities to be cached
    * @param {object} opts The options for the dao
    * @param {string} method The dao method to call
    * @returns {Promise}
@@ -60,13 +70,27 @@ function asyncStore(dao, options = {}) {
         store.set(entity[identifier], {
           bump: false,
           promise: Promise.resolve(entity),
-          expirationTimer: setTimeout(lruExpire.bind(null, id), expirationStep),
+          expirationTimer: setTimeout(lruExpire.bind(null, entity[identifier]), expirationStep),
           created,
         });
       });
 
       return list;
     });
+  }
+
+  /**
+   * Performs a list query that returns a list of entities to be cached
+   * @param {object} opts The options for the dao - requires an `ids` list property
+   * @param {string} method The dao method to call
+   * @returns {Promise}
+   */
+  function list(opts, method) {
+    return Promise.all((opts.ids || []).map(id => {
+      const params = Object.assign({}, opts);
+      params[identifier] = id;
+      return get(params, method);
+    }));
   }
 
   /**
@@ -93,7 +117,7 @@ function asyncStore(dao, options = {}) {
   }
 
   // Store public functions
-  return { get, search }
+  return { get, list, search, direct }
 }
 
 /* Exports -------------------------------------------------------------------*/
