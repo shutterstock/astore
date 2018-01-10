@@ -25,13 +25,37 @@ You'll need to wrap your dao object and make sure that the signature for calls i
 const astore = require("async-store");
 const usersDAO = require("../dao/users");
 const usersStore = astore(usersDAO, {
-  timeoutStep: 1000,
-  maxTimeout: 10000,
-  identifier: "id"
+  timeoutStep: 1000, // Subsequent requests for the same entity will extend the caching for <timeoutStep> ms.
+  maxTimeout: 10000, // This is the maximum caching period for a given entity in ms.
+  identifier: "id"   // If the identifier portion of your entity is not labeled "id", you can define it here.
 });
 
+/**
+ * Get a single entity
+ * The first argument represents the arguments that you would normally pass to your DAO.
+ * The second is the DOA method to call. Make sure that the reply from the DAO is a single cacheable entity.
+ */
 usersStore.get({ id: 123 }, "getUser")
   .then((user) => /* The user */);
+  
+/**
+ * Get a list of entities
+ * This leverages pre-flight store optimizations by running the actual DAO calls individually.
+ * Otherwise, you could use the post-call caching provided with the `search` function.
+ */
+userStore.list({ ids: [123, 456, 789] }, "getUser")
+  .then((users) => /* The list of users */);
+  
+userStore.search({ ids: [123, 456, 789] }, "getList")
+  .then((users) => /* The list of users */);
+
+/**
+ * Skip store features
+ * For any sensitive or user-specific data, it is NOT recommended to use storing.
+ * To bypass the store, you can use the `direct` method.
+ */
+userStore.list({ ids: [123, 456, 789] }, "getUser")
+  .then((users) => /* The list of users */);
 
 ```
 
