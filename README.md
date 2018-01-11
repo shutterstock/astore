@@ -1,4 +1,4 @@
-# Async-store
+# Astore
 
 A store that sits on top of your DAO to save your application from making unecessary calls.
 
