@@ -4,17 +4,17 @@ A store that sits on top of your DAO to save your application from making uneces
 
 ---
 
-[![async-store](https://img.shields.io/npm/v/async-store.svg)](https://www.npmjs.com/package/async-store)
+[![astore](https://img.shields.io/npm/v/astore.svg)](https://www.npmjs.com/package/astore)
 [![Node](https://img.shields.io/badge/node->%3D6.0-blue.svg)](https://nodejs.org)
-[![Build Status](https://travis-ci.org/shutterstock/async-store.svg?branch=master)](https://travis-ci.org/shutterstock/async-store)
-[![Dependencies Status](https://david-dm.org/shutterstock/async-store.svg)](https://david-dm.org/shutterstock/async-store)
+[![Build Status](https://travis-ci.org/shutterstock/astore.svg?branch=master)](https://travis-ci.org/shutterstock/astore)
+[![Dependencies Status](https://david-dm.org/shutterstock/astore.svg)](https://david-dm.org/shutterstock/astore)
 
 
 ## Install
 
 In the intrest of keeping the process lightweight and strive for the golden **zero dependecies** standard. This module is compatible with Browsers.
 
-`npm install async-store --save`
+`npm install astore --save`
 
 
 ## Getting started
@@ -22,12 +22,13 @@ In the intrest of keeping the process lightweight and strive for the golden **ze
 You'll need to wrap your dao object and make sure that the signature for calls include an identifier at the top level of the options paramters and in the output.
 
 ```node
-const astore = require("async-store");
+const astore = require("astore");
 const usersDAO = require("../dao/users");
 const usersStore = astore(usersDAO, {
   timeoutStep: 1000, // Subsequent requests for the same entity will extend the caching for <timeoutStep> ms.
   maxTimeout: 10000, // This is the maximum caching period for a given entity in ms.
-  identifier: "id"   // If the identifier portion of your entity is not labeled "id", you can define it here.
+  identifier: "id",   // If the identifier portion of your entity is not labeled "id", you can define it here.
+  storageKey: (id, opts) => `${opts.category}.${id}` // The method for assigning unique keys for store entries.
 });
 
 /**
