@@ -14,6 +14,8 @@ function asyncStore(dao, options = {}) {
   const expirationStep = options.timeoutStep || 1000;
   const maxLifetimeTimeout = (options.maxTimeout || 10000) - expirationStep;
   const identifier = options.identifier || 'id';
+  const storageKey = options.storageKey || ((id) => `${id}`);
+  let enabled = (options.enabled === undefined) ? true : !!options.enabled;
 
   /**
    * Performs the query directly without delay or cache
@@ -32,7 +34,9 @@ function asyncStore(dao, options = {}) {
    * @returns {Promise}
    */
   function get(opts, method) {
-    const id = opts[identifier];
+    if (!enabled) return direct(opts, method);
+
+    const id = storageKey(opts[identifier], opts);
     const handle = store.get(id);
     if (handle) {
       handle.bump = true;
@@ -43,6 +47,9 @@ function asyncStore(dao, options = {}) {
       .then((entity) => {
         entry.expirationTimer = setTimeout(lruExpire.bind(null, id), expirationStep);
         return entity;
+      }, (err) => {
+        store.delete(id);
+        return Promise.reject(err);
       });
 
     const entry = {
@@ -64,15 +71,20 @@ function asyncStore(dao, options = {}) {
    * @returns {Promise}
    */
   function search(opts, method) {
+    if (!enabled) return direct(opts, method);
+
     return dao[method](opts).then((list) => {
       const created = Date.now();
-      list.forEach((entity) => {
-        store.set(entity[identifier], {
-          bump: false,
-          promise: Promise.resolve(entity),
-          expirationTimer: setTimeout(lruExpire.bind(null, entity[identifier]), expirationStep),
-          created,
-        });
+      Object.entries(list).forEach((entity) => {
+        if (entity[1][identifier]) {
+          const key = storageKey(entity[1][identifier], opts);
+          store.set(key, {
+            bump: false,
+            promise: Promise.resolve(entity[1]),
+            expirationTimer: setTimeout(lruExpire.bind(null, key), expirationStep),
+            created,
+          });
+        }
       });
 
       return list;
@@ -85,7 +97,7 @@ function asyncStore(dao, options = {}) {
    * @param {string} method The dao method to call
    * @returns {Promise}
    */
-  function list(opts, method) {
+  function getList(opts, method) {
     return Promise.all((opts.ids || []).map(id => {
       const params = Object.assign({}, opts);
       params[identifier] = id;
@@ -116,8 +128,26 @@ function asyncStore(dao, options = {}) {
     }
   }
 
+  /**
+   * Checks if a computed key is present in the store
+   * @param {string} key The key to search for
+   * @returns {boolean} Wether the key is in the store or not 
+   */
+  function has(key) {
+    return store.has(key);
+  }
+
+  /**
+   * Clears a specified computed key from the store
+   * @param {string} key The key to search for
+   * @returns {boolean} Wether the key was removed or not 
+   */
+  function clear(key) {
+    return store.delete(key);
+  }
+
   // Store public functions
-  return { get, list, search, direct }
+  return { get, getList, search, direct, has, clear };
 }
 
 /* Exports -------------------------------------------------------------------*/

@@ -43,7 +43,7 @@ usersStore.get({ id: 123 }, "getUser")
  * This leverages pre-flight store optimizations by running the actual DAO calls individually.
  * Otherwise, you could use the post-call caching provided with the `search` function.
  */
-userStore.list({ ids: [123, 456, 789] }, "getUser")
+userStore.getList({ ids: [123, 456, 789] }, "getUser")
   .then((users) => /* The list of users */);
   
 userStore.search({ ids: [123, 456, 789] }, "getList")
