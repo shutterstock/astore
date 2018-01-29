@@ -12,14 +12,40 @@ A store that sits on top of your DAO to save your application from making uneces
 
 ## Install
 
-In the intrest of keeping the process lightweight and strive for the golden **zero dependecies** standard. This module is compatible with Browsers.
+This module has **zero dependecies**.
+This module is compatible with Browsers.
 
 `npm install astore --save`
 
 
+## Context
+
+When communicating with data services or databases, it is very common to include some form of caching layer in front of it. Unfortunatly, cache hit rates are not always optimal. Some resources run very hot and could even be requested multiple times concurrently.
+
+This module is a light wrapper for your data-access object. Provided it's methods accept a single option parameter and return Promises.
+
+DAO Example:
+
+```node
+function getUser(options) {
+  // Make some db call
+  return new Promise((resolve, reject) => {
+    db.execute('SELECT * from users WHERE id = ?', [options.id], (rows) => {
+      if (!rows || !rows.length) return reject();
+      resolve(rows[0]);
+    });
+  });
+}
+
+//...
+```
+
+`astore` will make sure that no two same requests are made simultaneously. The light LRU cache also allows data to be cached in-memory.
+
+
 ## Getting started
 
-You'll need to wrap your dao object and make sure that the signature for calls include an identifier at the top level of the options paramters and in the output.
+You'll need to wrap your dao object and make sure that the signature for calls include an identifier at the top level of the options parameters and in the output.
 
 ```node
 const astore = require("astore");
@@ -78,14 +104,9 @@ Pull requests are always welcome! Please follow a few guidelines:
 
 Add a unit test or two to cover the proposed changes
 Do as the Romans do and stick with existing whitespace and formatting conventions (i.e., spaces instead of tabs, etc)
-Please note that all interactions with Shutterstock follow the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+Please note that all interactions with Shutterstock follow the [Contributor Covenant Code of Conduct](https://github.com/shutterstock/welcome/blob/master/CODE_OF_CONDUCT.md).
 
-
-## Authors
-
-[<img alt="fed135" src="https://avatars1.githubusercontent.com/u/2380281?v=4" height="120px" width="120px">](https://github.com/fed135) |
-:---:|
-[fed135](https://github.com/fed135)|
+Make sure that you also follow the [Contributing Guidelines](https://github.com/shutterstock/welcome/blob/master/CONTRIBUTING.md).
 
 
 ## License
