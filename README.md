@@ -5,7 +5,7 @@ A store that sits on top of your DAO to save your application from making uneces
 ---
 
 [![astore](https://img.shields.io/npm/v/astore.svg)](https://www.npmjs.com/package/astore)
-[![Node](https://img.shields.io/badge/node->%3D6.0-blue.svg)](https://nodejs.org)
+[![Node](https://img.shields.io/badge/node->%3D8.0-blue.svg)](https://nodejs.org)
 [![Build Status](https://travis-ci.org/shutterstock/astore.svg?branch=master)](https://travis-ci.org/shutterstock/astore)
 [![Dependencies Status](https://david-dm.org/shutterstock/astore.svg)](https://david-dm.org/shutterstock/astore)
 

@@ -1,6 +1,6 @@
 {
   "name": "astore",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An ephemeral shared store for DAOs",
   "main": "src/index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "type": "git",
     "url": "git://github.com/shutterstock/astore.git"
   },
+
   "bugs": {
     "url": "https://github.com/shutterstock/astore/issues"
   },
@@ -26,7 +27,7 @@
     "node"
   ],
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "contributors": [
     "Frederic Charette <fcharette@shutterstock.com>"
