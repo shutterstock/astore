@@ -10,10 +10,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/shutterstock/forked-http.git"
+    "url": "git://github.com/shutterstock/astore.git"
   },
   "bugs": {
-    "url": "https://github.com/shutterstock/forked-http/issues"
+    "url": "https://github.com/shutterstock/astore/issues"
   },
   "keywords": [
     "async",
