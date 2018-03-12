@@ -13,6 +13,7 @@ A store that sits on top of your DAO to save your application from making uneces
 ## Install
 
 This module has **zero dependecies**.
+
 This module is compatible with Browsers.
 
 `npm install astore --save`
@@ -22,7 +23,8 @@ This module is compatible with Browsers.
 
 When communicating with data services or databases, it is very common to include some form of caching layer in front of it. Unfortunatly, cache hit rates are not always optimal. Some resources run very hot and could even be requested multiple times concurrently.
 
-This module is a light wrapper for your data-access object. Provided it's methods accept a single option parameter and return Promises.
+This module is a light wrapper for your data-access object. Provided it's methods accept a single option parameter and return Promises. `astore` will make sure that no two same requests are made simultaneously.
+
 
 DAO Example:
 
@@ -39,9 +41,6 @@ function getUser(options) {
 
 //...
 ```
-
-`astore` will make sure that no two same requests are made simultaneously. The light LRU cache also allows data to be cached in-memory.
-
 
 ## Getting started
 
