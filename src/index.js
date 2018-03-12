@@ -147,7 +147,7 @@ function asyncStore(dao, options = {}) {
   }
 
   // Store public functions
-  return { get, getList, search, direct, has, clear };
+  return { get, getList, search, direct, has, clear, storageKey, identifier };
 }
 
 /* Exports -------------------------------------------------------------------*/
