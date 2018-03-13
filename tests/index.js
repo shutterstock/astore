@@ -46,6 +46,19 @@ const testDao = {
       }, testDuration);
     });
   },
+  searchIndexedNull: (opts) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          '123': {
+            id: 123,
+            stuff: 'yes',
+          },
+          '456': null,
+        })
+      }, testDuration);
+    });
+  },
 };
 
 describe('Smoke test, single', () => {
@@ -151,6 +164,21 @@ describe('Smoke test, search indexed', () => {
   it('should cache entities', (done) => {
     let now = Date.now();
     testStore.search({ }, 'searchIndexed')
+      .then(() => {
+        expect((Date.now() - now)).to.be.at.least(testDuration - 1);
+        now = Date.now();
+      })
+      .then(testStore.get.bind(null, { id: 123 }, 'getOne'))
+      .then(() => {
+        expect((Date.now() - now)).to.be.at.most(1);
+        now = Date.now();
+        done();
+      });
+  });
+  
+  it('should handle null entities', (done) => {
+    let now = Date.now();
+    testStore.search({ }, 'searchIndexedNull')
       .then(() => {
         expect((Date.now() - now)).to.be.at.least(testDuration - 1);
         now = Date.now();

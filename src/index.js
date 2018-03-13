@@ -75,16 +75,14 @@ function asyncStore(dao, options = {}) {
 
     return dao[method](opts).then((list) => {
       const created = Date.now();
-      Object.entries(list).forEach((entity) => {
-        if (entity[1][identifier]) {
-          const key = storageKey(entity[1][identifier], opts);
-          store.set(key, {
-            bump: false,
-            promise: Promise.resolve(entity[1]),
-            expirationTimer: setTimeout(lruExpire.bind(null, key), expirationStep),
-            created,
-          });
-        }
+      Object.entries(list).forEach((entity, i) => {
+        const key = storageKey((entity[0] != i) ? entity[0] : entity[1] && entity[1][identifier], opts);
+        store.set(key, {
+          bump: false,
+          promise: Promise.resolve(entity[1]),
+          expirationTimer: setTimeout(lruExpire.bind(null, key), expirationStep),
+          created,
+        });
       });
 
       return list;
