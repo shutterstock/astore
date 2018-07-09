@@ -144,8 +144,16 @@ function asyncStore(dao, options = {}) {
     return store.delete(key);
   }
 
+  /**
+   * Returns the number of records in the cache
+   * @returns {integer} The number of records in the cache 
+   */
+  function size() {
+    return store.size;
+  }
+
   // Store public functions
-  return { get, getList, search, direct, has, clear, storageKey, identifier };
+  return { get, getList, search, direct, has, clear, storageKey, identifier, size };
 }
 
 /* Exports -------------------------------------------------------------------*/
